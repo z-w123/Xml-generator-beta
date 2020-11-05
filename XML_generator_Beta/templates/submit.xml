@@ -8,12 +8,6 @@
          <ADD source="sample.xml" schema="sample"/>
       </ACTION>
       <ACTION>
-         <ADD source="experiment.xml" schema="experiment"/>
-      </ACTION>
-      <ACTION>
-         <ADD source="run.xml" schema="run"/>
-      </ACTION>
-      <ACTION>
          <HOLD HoldUntilDate="2019-01-01"/>
       </ACTION>
    </ACTIONS>
