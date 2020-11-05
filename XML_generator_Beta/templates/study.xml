@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <PROJECT_SET>
-   <PROJECT alias="cheddar_cheese" center_name="Department of Computer Science">
-      <TITLE>Characterisation of Microbial Diversity and Chemical Properties of Cheddar Cheese Prepared from Heat-treated Milk</TITLE>
-      <DESCRIPTION>This study aimed to characterise the interaction of microbial diversity and chemical properties of Cheddar cheese after three different heat treatments of milk</DESCRIPTION>
+   <PROJECT alias="xml_generator_beta_test" center_name="EBI">
+      <TITLE>xml_generator_beta sars_cov_2_test</TITLE>
+      <DESCRIPTION>test description</DESCRIPTION>
       <SUBMISSION_PROJECT>
          <SEQUENCING_PROJECT/>
       </SUBMISSION_PROJECT>
