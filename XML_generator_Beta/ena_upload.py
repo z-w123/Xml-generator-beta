@@ -1,7 +1,5 @@
 #! /usr/bin/env python
-__authors__ = "Ahmad Zyoud"
-__email__ = "azyoud@ebi.ac.uk"
-__adapted__ = "Dilmurat Yusuf"
+__author__ = "Dilmurat Yusuf"
 __copyright__ = "Copyright 2020, Dilmurat Yusuf"
 __email__ = "Dilmurat.yusuf@gmail.com"
 __license__ = "MIT"
