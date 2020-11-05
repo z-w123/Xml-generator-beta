@@ -1,0 +1,25 @@
+lxml tips + tricks
+
+1) creating a mini xml file, with a root + a child element
+
+<!-- this will show you your root structure in unicode -->
+from lxml import etree as et
+root = et.Element("root")
+print(root.tag)
+child1 = et.SubElement(root, "child1")
+print(et.tostring(root, pretty_print=True,encoding='unicode'))
+
+<!-- ouput -->
+root
+<root>
+  <child1/>
+</root>
+
+<!-- to create a child element -->
+child3 = et.SubElement(root, "child3")
+<!-- ouput -->
+root
+<root>
+  <child1/>
+  <child3/>
+</root>

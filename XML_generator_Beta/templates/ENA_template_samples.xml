@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SAMPLE_SET xmlns:py="http://genshi.edgewall.org/"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="ftp://ftp.sra.ebi.ac.uk/meta/xsd/sra_1_5/SRA.sample.xsd">
+    <py:for each="index, row in df.iterrows()">
+    <SAMPLE alias="${row.sample_alias}" center_name="${row.center_name}">
+        <!--TODO: UNIQUE NAME FOR SAMPLE-->
+        <!--TODO: CENTER NAME-->
+        <TITLE>${row.sample_title}</TITLE>
+        <!--TODO: A SHORT INFORMATIVE DESCRIPTION OF THE SAMPLE-->
+        <SAMPLE_NAME>
+            <TAXON_ID>${row.taxon_id}</TAXON_ID>
+            <!--TODO: PROVIDE NCBI TAXID FOR ORGANISM (e.g. 9606 for human)-->
+            <!-- For complete prokaryotic genomes, a taxid should be generate for the strain.
+                 Please contact us so we can generate this on your behalf. -->
+            <SCIENTIFIC_NAME>${row.scientific_name}</SCIENTIFIC_NAME>
+            <!--TODO: SCIENTIFIC NAME AS APPEARS IN NCBI TAXONOMY FOR THE
+                TAXON_ID (e.g. homo sapiens)-->
+         <COMMON_NAME>SARS-CoV-2</COMMON_NAME>
+         </SAMPLE_NAME>
+        <DESCRIPTION>${row.sample_description}</DESCRIPTION>
+        <!--TODO: A LONGER DESCRIPTION OF SAMPLE AND HOW IT DIFFERS FROM
+            OTHER SAMPLES-->
+         <SAMPLE_ATTRIBUTES>  
+          <SAMPLE_ATTRIBUTE>
+          <TAG>common_name</TAG>
+               <VALUE>${row.common_name}</VALUE>
+          </SAMPLE_ATTRIBUTE>  
+           <SAMPLE_ATTRIBUTE>
+           <TAG>collection_date</TAG>
+               <VALUE>${row.collection_date}</VALUE>  
+         </SAMPLE_ATTRIBUTE> 
+          
+         <SAMPLE_ATTRIBUTE>
+          <TAG>geographic_location (country and/or sea)</TAG>
+               <VALUE>${row.geographic_location_country_and_or_sea}</VALUE>
+                 </SAMPLE_ATTRIBUTE>  
+         
+         <SAMPLE_ATTRIBUTE>
+         <TAG>geographic location (latitude)</TAG>
+               <VALUE>${row.geographic_location_latitude}</VALUE>
+               <UNITS>${row.units_1}</UNITS>
+              </SAMPLE_ATTRIBUTE> 
+         
+         <SAMPLE_ATTRIBUTE>
+         <TAG>geographic location (longitude)</TAG>
+               <VALUE>${row.geographic_location_longitude}</VALUE>
+            <UNITS>${row.units_2}</UNITS>
+          </SAMPLE_ATTRIBUTE> 
+         
+         <SAMPLE_ATTRIBUTE>
+          <TAG>geographic location (region and locality)</TAG>
+               <VALUE>${row.geographic_location_region_and_locality}</VALUE>
+              </SAMPLE_ATTRIBUTE>  
+         
+         <SAMPLE_ATTRIBUTE>
+         <TAG>sample_capture_status</TAG>
+               <VALUE>${row.sample_capture_status}</VALUE>
+            </SAMPLE_ATTRIBUTE> 
+         
+         <SAMPLE_ATTRIBUTE>
+         <TAG>host disease outcome</TAG>
+               <VALUE>${row.host_disease_outcome}</VALUE>
+                </SAMPLE_ATTRIBUTE> 
+         
+         <SAMPLE_ATTRIBUTE>
+          <TAG>host_common_name</TAG>
+               <VALUE>${row.host_common_name}</VALUE>
+               </SAMPLE_ATTRIBUTE> 
+         
+         <SAMPLE_ATTRIBUTE>
+          <TAG>host_subject_id</TAG>
+               <VALUE>${row.host_subject_id}</VALUE>
+                  </SAMPLE_ATTRIBUTE> 
+          
+          <SAMPLE_ATTRIBUTE>
+               <TAG>host age</TAG>
+               <VALUE>${row.host_age}</VALUE>
+               <UNITS>${row.units_3}</UNITS>
+               </SAMPLE_ATTRIBUTE> 
+               
+                 <SAMPLE_ATTRIBUTE>
+          <TAG>host health state</TAG>
+               <VALUE>${row.host_health_state}</VALUE>
+          </SAMPLE_ATTRIBUTE>  
+           <SAMPLE_ATTRIBUTE>
+           <TAG>host_sex</TAG>
+               <VALUE>${row.host_sex}</VALUE>  
+         </SAMPLE_ATTRIBUTE> 
+          
+         <SAMPLE_ATTRIBUTE>
+          <TAG>host_scientific_name</TAG>
+               <VALUE>${row.host_scientific_name}</VALUE>
+                 </SAMPLE_ATTRIBUTE>  
+         
+         <SAMPLE_ATTRIBUTE>
+         <TAG>virus identifier</TAG>
+               <VALUE>${row.virus_identifier}</VALUE>
+              </SAMPLE_ATTRIBUTE> 
+         
+         <SAMPLE_ATTRIBUTE>
+         <TAG>collector name</TAG>
+               <VALUE>${row.collector_name}</VALUE>
+          </SAMPLE_ATTRIBUTE> 
+         
+         <SAMPLE_ATTRIBUTE>
+          <TAG>collecting institution</TAG>
+               <VALUE>${row.collecting_institution}</VALUE>
+              </SAMPLE_ATTRIBUTE>  
+         
+         <SAMPLE_ATTRIBUTE>
+         <TAG>receipt date</TAG>
+               <VALUE>${row.receipt_date}</VALUE>
+            </SAMPLE_ATTRIBUTE> 
+         
+         <SAMPLE_ATTRIBUTE>
+         <TAG>definition for seropositive sample</TAG>
+               <VALUE>${row.definition_for_seropositive_sample}</VALUE>
+                </SAMPLE_ATTRIBUTE> 
+                                                          
+                <SAMPLE_ATTRIBUTE>
+         <TAG>isolate</TAG>
+               <VALUE>${row.isolate}</VALUE>
+              </SAMPLE_ATTRIBUTE> 
+         
+         <SAMPLE_ATTRIBUTE>
+         <TAG>host habitat</TAG>
+               <VALUE>${row.host_habitat}</VALUE>
+          </SAMPLE_ATTRIBUTE> 
+         
+         <SAMPLE_ATTRIBUTE>
+          <TAG>isolation source host-associated</TAG>
+               <VALUE>${row.isolation_source_host_associated}</VALUE>
+              </SAMPLE_ATTRIBUTE>  
+         
+         <SAMPLE_ATTRIBUTE>
+         <TAG>host behaviour</TAG>
+               <VALUE>${row.host_behaviour}</VALUE>
+            </SAMPLE_ATTRIBUTE> 
+         
+         <SAMPLE_ATTRIBUTE>
+         <TAG>isolation source non-host-associated</TAG>
+               <VALUE>${row.isolation_source_non_host_associated}</VALUE>
+                </SAMPLE_ATTRIBUTE>   
+                               
+          <SAMPLE_ATTRIBUTE>
+               <TAG>ENA-CHECKLIST</TAG>
+               <VALUE>${row.ena_checklist}</VALUE>
+               </SAMPLE_ATTRIBUTE>                
+          </SAMPLE_ATTRIBUTES>
+    </SAMPLE>
+    </py:for>
+</SAMPLE_SET>
+
