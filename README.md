@@ -4,7 +4,7 @@ Validation is performed against the ERC000033 checklist: https://www.ebi.ac.uk/e
 
 This tool is adapted from an existing tool located in this repository: https://github.com/usegalaxy-eu/ena-upload-cli . Tables and template xmls have been modified and all run and experiment data has been removed.
 
-Please note this tool is *still in development* - although studies and samples are submittable, they are *not able to become public* at the moment.
+Please note this tool is **still in development** - although studies and samples are submittable, they are **not able to become public** at the moment.
 
 ### /example_tables 
 template study and sample spreadsheets, containing corresponding metadata for upload
