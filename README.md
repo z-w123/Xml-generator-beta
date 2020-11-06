@@ -12,7 +12,7 @@ template study and sample spreadsheets, containing corresponding metadata for up
 ### /templates
 required xsds and template xmls to generate study and sample xmls from
 
-### / test command to run in program directory
+### test command to run in program directory
 python3 ena_upload.py --action add --study example_tables/ENA_template_studies.tsv --sample example_tables/ENA_template_samples.tsv --center 'CENTER_NAME' --webin_id W
 ebin-#### --password '#####' --dev
 
