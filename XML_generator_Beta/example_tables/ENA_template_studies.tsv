@@ -1,2 +1,0 @@
-alias	status	center_name	accession	title	study_type	study_abstract	pubmed_id	submission_date
-test_study_alias	add	EBI-TEST	update_by_ENA	test_study_title	Transcriptome Sequencing	test_study_abstract	None	update_by_ENA
