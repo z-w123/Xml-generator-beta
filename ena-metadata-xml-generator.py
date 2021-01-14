@@ -74,55 +74,55 @@ if ws['C6'].value !=None:
 doc, tag, text = Doc().tagtext()
 xml_header = '<?xml version="1.0" encoding="UTF-8"?>'
 
-
-doc.asis(xml_header)
-with tag('SAMPLE_SET'):
-    for row in ws.iter_rows(min_row=6, min_col=12, max_col=41, values_only=True):
-        found = False
-        for x in row:
-            if x != None:
-                found = True
-        if found == True:
-            first = row[0:5]
-            all = row[5:]
-            with tag('SAMPLE', alias=first[0]):
-                with tag("TITLE"):
-                    text(first[3])
-                with tag('SAMPLE_NAME'):
-                    with tag("TAXON_ID"):
-                        text(first[1])
-                    with tag("SCIENTIFIC_NAME"):
-                        text(first[2])
-                with tag("DESCRIPTION"):
-                    text(first[4])
-                with tag('SAMPLE_ATTRIBUTES'):
-                    for x in all:
-                        if x != None:
-                            with tag("SAMPLE_ATTRIBUTE"):
-                                with tag("TAG"):
-                                    text(ws[2][row.index(x)+11].value)
-                                with tag("VALUE"):
-                                    text(str(x))
-                                if ws[5][row.index(x)+11].value != None:
-                                    with tag("UNITS"):
-                                        text(ws[5][row.index(x)+11].value)
-                    with tag("SAMPLE_ATTRIBUTE"):
-                        with tag("TAG"):
-                            text("ENA-CHECKLIST")
-                        with tag("VALUE"):
-                            text("ERC000033")
-
-
+if ws['L6'].value !=None:
+    doc.asis(xml_header)
+    with tag('SAMPLE_SET'):
+        for row in ws.iter_rows(min_row=6, min_col=12, max_col=41, values_only=True):
+            found = False
+            for x in row:
+                if x != None:
+                    found = True
+            if found == True:
+                first = row[0:5]
+                all = row[5:]
+                with tag('SAMPLE', alias=first[0]):
+                    with tag("TITLE"):
+                        text(first[3])
+                    with tag('SAMPLE_NAME'):
+                        with tag("TAXON_ID"):
+                            text(first[1])
+                        with tag("SCIENTIFIC_NAME"):
+                            text(first[2])
+                    with tag("DESCRIPTION"):
+                        text(first[4])
+                    with tag('SAMPLE_ATTRIBUTES'):
+                        for x in all:
+                            if x != None:
+                                with tag("SAMPLE_ATTRIBUTE"):
+                                    with tag("TAG"):
+                                        text(ws[2][row.index(x)+11].value)
+                                    with tag("VALUE"):
+                                        text(str(x))
+                                    if ws[5][row.index(x)+11].value != None:
+                                        with tag("UNITS"):
+                                            text(ws[5][row.index(x)+11].value)
+                        with tag("SAMPLE_ATTRIBUTE"):
+                            with tag("TAG"):
+                                text("ENA-CHECKLIST")
+                            with tag("VALUE"):
+                                text("ERC000033")
 
 
-result = indent(
-    doc.getvalue(),
-    #indentation = '    ',
-    indent_text = False
-)
 
-with open("sample.xml", "w") as f:
-    f.write(result)
+
+    result = indent(
+        doc.getvalue(),
+        #indentation = '    ',
+        indent_text = False
+    )
+
+    with open("sample.xml", "w") as f:
+        f.write(result)
 
 #creating the submission xml
 
@@ -161,6 +161,12 @@ if ws['C6'].value == None:
     if args.test is False:
         command = 'curl -u {}:{} -F "SUBMISSION=@submission.xml" -F "SAMPLE=@sample.xml"  "https://www.ebi.ac.uk/ena/submit/drop-box/submit/"'.format(
             args.username, args.password)
+elif ws['L6'].value == None:
+    if args.test is True:
+        command = 'curl -u {}:{} -F "SUBMISSION=@submission.xml" -F "STUDY=@study.xml" "https://wwwdev.ebi.ac.uk/ena/submit/drop-box/submit/"'.format(args.username, args.password)
+
+    if args.test is False:
+        command = 'curl -u {}:{} -F "SUBMISSION=@submission.xml" -F "STUDY=@study.xml" "https://www.ebi.ac.uk/ena/submit/drop-box/submit/"'.format(args.username, args.password)
 else:
     if args.test is True:
         command = 'curl -u {}:{} -F "SUBMISSION=@submission.xml" -F "SAMPLE=@sample.xml" -F "STUDY=@study.xml" "https://wwwdev.ebi.ac.uk/ena/submit/drop-box/submit/"'.format(args.username, args.password)
