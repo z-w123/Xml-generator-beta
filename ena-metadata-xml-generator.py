@@ -31,42 +31,43 @@ ws = wb.worksheets[0]
 doc, tag, text = Doc().tagtext()
 xml_header = '<?xml version="1.0" encoding="UTF-8"?>'
 doc.asis(xml_header)
-with tag('STUDY_SET'):
-    for row_study in ws.iter_rows(min_row=6, min_col=3, max_col=9, values_only=True):
-        found_study = False
-        for y in row_study:
-            if y != None:
-                found_study = True
-        if found_study == True:
-            first_study = row_study[0:6]
-            all_study = row_study[6:]
-            with tag('STUDY', alias=first_study[0]):
-                with tag("DESCRIPTOR"):
-                    with tag("STUDY_TITLE"):
-                        text(first_study[3])
-                    doc.stag('STUDY_TYPE', existing_study_type="Other")
-                    with tag("STUDY_ABSTRACT"):
-                        text(first_study[5])
-                    with tag("CENTER_PROJECT_NAME"):
-                        text(first_study[4])
-                with tag('STUDY_ATTRIBUTES'):
-                    for y in all_study:
-                        if y != None:
-                            with tag("STUDY_ATTRIBUTE"):
-                                with tag("TAG"):
-                                    text(ws[2][row_study.index(y)+2].value)
-                                with tag("VALUE"):
-                                    text(str(y))
+if ws['C6'].value !=None:
+    with tag('STUDY_SET'):
+        for row_study in ws.iter_rows(min_row=6, min_col=3, max_col=9, values_only=True):
+            found_study = False
+            for y in row_study:
+                if y != None:
+                    found_study = True
+            if found_study == True:
+                first_study = row_study[0:6]
+                all_study = row_study[6:]
+                with tag('STUDY', alias=first_study[0]):
+                    with tag("DESCRIPTOR"):
+                        with tag("STUDY_TITLE"):
+                            text(first_study[3])
+                        doc.stag('STUDY_TYPE', existing_study_type="Other")
+                        with tag("STUDY_ABSTRACT"):
+                            text(first_study[5])
+                        with tag("CENTER_PROJECT_NAME"):
+                            text(first_study[4])
+                    with tag('STUDY_ATTRIBUTES'):
+                        for y in all_study:
+                            if y != None:
+                                with tag("STUDY_ATTRIBUTE"):
+                                    with tag("TAG"):
+                                        text(ws[2][row_study.index(y)+2].value)
+                                    with tag("VALUE"):
+                                        text(str(y))
 
 
-result_study = indent(
-    doc.getvalue(),
-    #indentation = '    ',
-    indent_text = False
-)
+    result_study = indent(
+        doc.getvalue(),
+        #indentation = '    ',
+        indent_text = False
+    )
 
-with open("study.xml", "w") as f:
-    f.write(result_study)
+    with open("study.xml", "w") as f:
+        f.write(result_study)
 
 # Creating sample xml
 # Create Yattag doc, tag and text objects
@@ -152,11 +153,20 @@ with open("submission.xml", "w") as f:
     f.write(result_s)
 
 # submission command
-if args.test is True:
-    command = 'curl -u {}:{} -F "SUBMISSION=@submission.xml" -F "SAMPLE=@sample.xml" -F "STUDY=@study.xml" "https://wwwdev.ebi.ac.uk/ena/submit/drop-box/submit/"'.format(args.username, args.password)
+if ws['C6'].value == None:
+    if args.test is True:
+        command = 'curl -u {}:{} -F "SUBMISSION=@submission.xml" -F "SAMPLE=@sample.xml"  "https://wwwdev.ebi.ac.uk/ena/submit/drop-box/submit/"'.format(
+            args.username, args.password)
 
-if args.test is False:
-    command = 'curl -u {}:{} -F "SUBMISSION=@submission.xml" -F "SAMPLE=@sample.xml" -F "STUDY=@study.xml" "https://www.ebi.ac.uk/ena/submit/drop-box/submit/"'.format(args.username, args.password)
+    if args.test is False:
+        command = 'curl -u {}:{} -F "SUBMISSION=@submission.xml" -F "SAMPLE=@sample.xml"  "https://www.ebi.ac.uk/ena/submit/drop-box/submit/"'.format(
+            args.username, args.password)
+else:
+    if args.test is True:
+        command = 'curl -u {}:{} -F "SUBMISSION=@submission.xml" -F "SAMPLE=@sample.xml" -F "STUDY=@study.xml" "https://wwwdev.ebi.ac.uk/ena/submit/drop-box/submit/"'.format(args.username, args.password)
+
+    if args.test is False:
+        command = 'curl -u {}:{} -F "SUBMISSION=@submission.xml" -F "SAMPLE=@sample.xml" -F "STUDY=@study.xml" "https://www.ebi.ac.uk/ena/submit/drop-box/submit/"'.format(args.username, args.password)
 
 sp = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 out, err = sp.communicate()
