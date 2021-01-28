@@ -51,11 +51,12 @@ if ws['C6'].value !=None:
                         with tag("CENTER_PROJECT_NAME"):
                             text(first_study[4])
                     with tag('STUDY_ATTRIBUTES'):
-                        for y in all_study:
+                        for z in range(len(all_study)):
+                            y = all_study[z];
                             if y != None:
                                 with tag("STUDY_ATTRIBUTE"):
                                     with tag("TAG"):
-                                        text(ws[2][row_study.index(y)+2].value)
+                                        text(ws[2][z+2+len(first_study)].value)
                                     with tag("VALUE"):
                                         text(str(y))
 
@@ -96,16 +97,17 @@ if ws['L6'].value !=None:
                     with tag("DESCRIPTION"):
                         text(first[4])
                     with tag('SAMPLE_ATTRIBUTES'):
-                        for x in all:
+                        for y in range(len(all)):
+                            x = all[y];
                             if x != None:
                                 with tag("SAMPLE_ATTRIBUTE"):
                                     with tag("TAG"):
-                                        text(ws[2][row.index(x)+11].value)
+                                        text(ws[2][y+11+len(first)].value)
                                     with tag("VALUE"):
                                         text(str(x))
-                                    if ws[5][row.index(x)+11].value != None:
+                                    if ws[5][y+11+len(first)].value != None:
                                         with tag("UNITS"):
-                                            text(ws[5][row.index(x)+11].value)
+                                            text(ws[5][y+11+len(first)].value)
                         with tag("SAMPLE_ATTRIBUTE"):
                             with tag("TAG"):
                                 text("ENA-CHECKLIST")
