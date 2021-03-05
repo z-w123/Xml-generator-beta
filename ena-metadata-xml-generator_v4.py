@@ -25,6 +25,7 @@ parser.add_argument('-u', '--username', help='Webin submission account username 
 parser.add_argument('-p', '--password', help='password for Webin submission account', type=str, required=True)
 parser.add_argument('-t', '--test', help='Specify whether to use ENA test server for submission', action='store_true')
 parser.add_argument('-f', '--file', help='path for the metadata spreadsheet', type=str, required=True)
+parser.add_argument('-a', '--action', help='Specify the type of action needed ( ADD or MODIFY)', type=str, required=True)
 args = parser.parse_args()
 
 import pandas as pd
@@ -45,10 +46,11 @@ for f in files_xlsx:
         df.insert(26,"sample capture status",'active surveillance in response to outbreak',allow_duplicates=False)
         df.iloc[0, df.columns.get_loc('submission_tool')] = '' #effectively removes the 'drag and drop uploader tool' value from units row, by replacing with NaN
         df.iloc[0, df.columns.get_loc('sample capture status')] = '' #see above
-        df.rename(columns = {'collecting institute':'collecting institution'}, inplace = True)
-        df["release_date"] = pd.to_datetime(df["release_date"]).dt.strftime( "%Y-%m-%d")
-        df["collection date"] = pd.to_datetime(df["collection date"]).dt.strftime("%Y-%m-%d")
-        df["receipt date"] = pd.to_datetime(df["receipt date"]).dt.strftime("%Y-%m-%d")
+        df["release_date"] = pd.to_datetime(df["release_date"], errors='coerce').dt.strftime( "%Y-%m-%d")
+        df["collection date"] = pd.to_datetime(df["collection date"], errors='coerce').dt.strftime("%Y-%m-%d")
+        df["receipt date"] = pd.to_datetime(df["receipt date"], errors='coerce').dt.strftime("%Y-%m-%d")
+        df['collection date'] = df['collection date'].fillna('not provided')
+        df.iloc[0, df.columns.get_loc('collection date')] = ''
         print('user sample & study data below:')
         print(df)
         df.to_excel(r'trimmed_assembly_study_sample_metadata_22_feb.xlsx', index=False)
@@ -63,9 +65,12 @@ for f in files_xlsx:
         df.iloc[0, df.columns.get_loc('submission_tool')] = '' #effectively removes the 'drag and drop uploader tool' value from units row, by replacing with NaN
         df.iloc[0, df.columns.get_loc('sample capture status')] = '' #see above
         df.rename(columns = {'collecting institute':'collecting institution'}, inplace = True) #####temp fix for collecting institute error
-        df["release_date"] = pd.to_datetime(df["release_date"]).dt.strftime( "%Y-%m-%d")
-        df["collection date"] = pd.to_datetime(df["collection date"]).dt.strftime("%Y-%m-%d")
-        df["receipt date"] = pd.to_datetime(df["receipt date"]).dt.strftime("%Y-%m-%d")
+        df.rename(columns={'collecting institute': 'collecting institution'}, inplace=True)
+        df["release_date"] = pd.to_datetime(df["release_date"], errors='coerce').dt.strftime( "%Y-%m-%d")
+        df["collection date"] = pd.to_datetime(df["collection date"], errors='coerce').dt.strftime("%Y-%m-%d")
+        df["receipt date"] = pd.to_datetime(df["receipt date"], errors='coerce').dt.strftime("%Y-%m-%d")
+        df['collection date'] = df['collection date'].fillna('not provided')
+        df.iloc[0, df.columns.get_loc('collection date')] = ''
         print('user sample & study data below:')
         print(df)
         df.to_excel(r'trimmed_raw_reads_study_sample_metadata_22_feb.xlsx', index=False)
@@ -188,7 +193,7 @@ with tag('SUBMISSION_SET'):
     with tag('SUBMISSION'):
         with tag("ACTIONS"):
             with tag('ACTION'):
-                doc.stag('ADD')
+                doc.stag(args.action.upper())
             if ws['I3'].value != None:
                 with tag('ACTION'):
                     doc.stag('HOLD', HoldUntilDate=str(ws['I3'].value))
