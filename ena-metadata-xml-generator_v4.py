@@ -9,8 +9,10 @@ from yattag import Doc, indent
 import argparse, hashlib, os, subprocess, sys, time
 from datetime import datetime
 import csv
+import sys
+
 #03/01/2021 update: for loop to trim reads + assemblies -> v4 spreadsheet (without the 'submission tool field')
-#TODO: confirm that this works with output of covid-excel-utils script
+
 
 parser = argparse.ArgumentParser(prog='ena-metadata-xml-generator.py', formatter_class=argparse.RawDescriptionHelpFormatter,
                                      epilog="""
@@ -38,7 +40,7 @@ files_xlsx = glob.glob(args.file) #should we accept other spreadsheet extensions
 for f in files_xlsx:
     if fnmatch.fnmatch(f, '*genome*'):
         print('you are using an assembly spreadsheet')
-        df = pd.read_excel(f, usecols="L:AV", header=1, sheet_name='Sheet1') #col range suits v4 
+        df = pd.read_excel(f, usecols="L:AV", header=1, sheet_name='Sheet1') #col range suits v4
         df = df.iloc[2:,]
         df.dropna(axis=0, how='all', inplace=True)
         df.insert(7,"submission_tool",'drag and drop uploader tool',allow_duplicates=True) #study #to inject constant into trimmed df
@@ -72,6 +74,7 @@ for f in files_xlsx:
         df['collection date'] = df['collection date'].fillna('not provided')
         df.iloc[0, df.columns.get_loc('collection date')] = ''
         print('user sample & study data below:')
+        #pd.set_option("display.max_rows", None, "display.max_columns", None)
         print(df)
         df.to_excel(r'trimmed_raw_reads_study_sample_metadata_22_feb.xlsx', index=False)
     else:
@@ -84,35 +87,38 @@ doc, tag, text = Doc().tagtext()
 xml_header = '<?xml version="1.0" encoding="UTF-8"?>'
 doc.asis(xml_header)
 
-if ws['B3'].value !=None:
-    with tag('STUDY_SET'):
-        for row_study in ws.iter_rows(min_row=3, min_col=2, max_col=8, values_only=True):
-            found_study = False
-            for y in row_study:
-                if y != None:
-                    found_study = True
-            if found_study == True:
-                first_study = row_study[0:6]
-                all_study = row_study[6:]
-                with tag('STUDY', alias=first_study[0]):
-                    with tag("DESCRIPTOR"):
-                        with tag("STUDY_TITLE"):
-                            text(first_study[3])
-                        doc.stag('STUDY_TYPE', existing_study_type="Other")
-                        with tag("STUDY_ABSTRACT"):
-                            text(first_study[5])
-                        with tag("CENTER_PROJECT_NAME"):
-                            text(first_study[4])
-                    with tag('STUDY_ATTRIBUTES'):
-                        for z in range(len(all_study)):
-                            y = all_study[z];
-                            if y != None:
-                                with tag("STUDY_ATTRIBUTE"):
-                                    with tag("TAG"):
-                                        text(ws[1][z+2+len(first_study)].value)
-                                    with tag("VALUE"):
-                                        text(str(y))
+trimmed_df = pd.read_excel("trimmed_raw_reads_study_sample_metadata_22_feb.xlsx")
 
+if pd.Series(trimmed_df["study_alias"]).is_unique == True: #to check if a column contains unique values
+    if ws['B3'].value !=None: #study alias field of trimmed spreadsheet first row
+        with tag('STUDY_SET'):
+            for row_study in ws.iter_rows(min_row=3, min_col=2, max_col=9, values_only=True):
+                found_study = False
+                for y in row_study:
+                    if y != None:
+                        found_study = True
+                if found_study == True:
+                    first_study = row_study[0:6]
+                    all_study = row_study[6:]
+                    with tag('STUDY', alias=first_study[0]):
+                        with tag("DESCRIPTOR"):
+                            with tag("STUDY_TITLE"):
+                                text(first_study[3])
+                            doc.stag('STUDY_TYPE', existing_study_type="Other")
+                            with tag("STUDY_ABSTRACT"):
+                                text(first_study[5])
+                            with tag("CENTER_PROJECT_NAME"):
+                                text(first_study[4])
+                        with tag('STUDY_ATTRIBUTES'):
+                            for z in range(len(all_study)):
+                                y = all_study[z];
+                                if y != None:
+                                    with tag("STUDY_ATTRIBUTE"):
+                                        with tag("TAG"):
+                                            #text(ws[1][z+2+len(first_study)].value)
+                                            text(ws[1][z + 1 + len(first_study)].value) ###changed
+                                        with tag("VALUE"):
+                                            text(str(y))
 
     result_study = indent(
         doc.getvalue(),
@@ -122,6 +128,47 @@ if ws['B3'].value !=None:
 
     with open("study.xml", "w") as f:
         f.write(result_study)
+
+else:
+    if ws['B3'].value !=None: #study alias field of trimmed spreadsheet first row
+        with tag('STUDY_SET'):
+            for row_study in ws.iter_rows(min_row=3, max_row=3, min_col=2, max_col=9, values_only=True):
+                found_study = False
+                for y in row_study:
+                    if y != None:
+                        found_study = True
+                if found_study == True:
+                    first_study = row_study[0:6]
+                    all_study = row_study[6:]
+                    with tag('STUDY', alias=first_study[0]):
+                        with tag("DESCRIPTOR"):
+                            with tag("STUDY_TITLE"):
+                                text(first_study[3])
+                            doc.stag('STUDY_TYPE', existing_study_type="Other")
+                            with tag("STUDY_ABSTRACT"):
+                                text(first_study[5])
+                            with tag("CENTER_PROJECT_NAME"):
+                                text(first_study[4])
+                        with tag('STUDY_ATTRIBUTES'):
+                            for z in range(len(all_study)):
+                                y = all_study[z];
+                                if y != None:
+                                    with tag("STUDY_ATTRIBUTE"):
+                                        with tag("TAG"):
+                                            #text(ws[1][z+2+len(first_study)].value)
+                                            text(ws[1][z + 1 + len(first_study)].value) ###changed
+                                        with tag("VALUE"):
+                                            text(str(y))
+
+    result_study = indent(
+        doc.getvalue(),
+        #indentation = '    ',
+        indent_text = False
+    )
+
+    with open("study.xml", "w") as f:
+        f.write(result_study)
+
 
 # Creating sample xml
 # Create Yattag doc, tag and text objects
@@ -166,8 +213,6 @@ if ws['K3'].value !=None:
                                 text("ENA-CHECKLIST")
                             with tag("VALUE"):
                                 text("ERC000033")
-
-
 
 
     result = indent(
